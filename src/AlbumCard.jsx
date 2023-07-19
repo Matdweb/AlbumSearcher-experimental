@@ -1,6 +1,6 @@
 import React from 'react'
 
-function MusicCard() {
+function AlbumCard({name}) {
     return (
         <div className="card w-96 bg-base-100 shadow-xl">
             <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
@@ -15,4 +15,4 @@ function MusicCard() {
     )
 }
 
-export default MusicCard
+export default AlbumCard
