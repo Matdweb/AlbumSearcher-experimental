@@ -5,7 +5,8 @@ function App() {
   return (
     <>
       <div className=''>
-        <h1 className='outline outline-gray-900 outline-4 underline'>Hello World of React</h1>
+        <h1 className=''>Hello World of React</h1>
+        <button className='btn'>DaisyUI button</button>
       </div>
     </>
   )
