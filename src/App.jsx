@@ -4,9 +4,12 @@ import MusicCard from './MusicCard'
 import { useState } from 'react';
 
 function App() {
-  const clientId = process.env
+  const clientId = import.meta.env.VITE_CLIENT_ID_SPOTIFY_API;
+  const clientSecret = import.meta.env.VITE_CLIENT_SECRET_SPOTIFY_API;
+
   console.log(clientId);
   console.log(clientSecret);
+  console.log(import.meta.env.VITE_PAGE_LINK)
 
   const array = [1, 2, 3, 4, 5, 6];
 
