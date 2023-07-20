@@ -1,4 +1,3 @@
-import { handler } from 'daisyui';
 import './input.css'
 import AlbumCard from './AlbumCard'
 import { useEffect, useState } from 'react';
