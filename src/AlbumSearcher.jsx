@@ -59,12 +59,12 @@ function AlbumSearcher() {
     return (
         <div className='bg-gray-950 w-full h-full'>
 
-            <h1 className='font-bold font-9xl text-white pt-4 pb-2 pl-5'>
+            <h1 className='font-bold text-4xl text-white pt-4 pb-2 pl-5'>
                 Spotify Album Searcher
             </h1>
             <p className='pl-5'>Spotify API used to get the albums of the specified artist</p>
 
-            <div className='p-5'>
+            <div className='p-5 pt-8'>
                 <input type="text" name='singer' placeholder="Type some singer here" className="input input-bordered input-primary w-full max-w-xs" onChange={handleChange} value={searchInput} />
                 <button className='btn' onClick={handleSearch}>Search</button>
             </div>
