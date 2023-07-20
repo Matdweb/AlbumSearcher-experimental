@@ -9,7 +9,7 @@ function AlbumSearcher() {
     const pageLink = import.meta.env.VITE_PAGE_LINK;
 
     //const array = [1, 2, 3, 4, 5, 6];
-
+    const [successfullSearch, setSuccessfullSearch] = useState(true);
     const [searchInput, setSearchhInput] = useState('');
     const [accessToken, setAccessToken] = useState('');
     const [albums, setAlbums] = useState([]);
@@ -30,15 +30,23 @@ function AlbumSearcher() {
             }
         }
 
-        let artistID = await fetch('https://api.spotify.com/v1/search?q=' + searchInput + '&type=artist', searchParameters)
-            .then(response => response.json())
-            .then(data => { return data.artists.items[0].id });
-        console.log(searchInput + ' has such an ID ' + artistID)
+        try {
 
-        //GET request with the artist ID to extract the albums 
-        let fetchedAlbums = await fetch('https://api.spotify.com/v1/artists/' + artistID + '/albums?include_groups=album&market=US&limit=50', searchParameters)
-            .then(response => response.json())
-            .then(data => setAlbums(data.items))
+            let artistID = await fetch('https://api.spotify.com/v1/search?q=' + searchInput + '&type=artist', searchParameters)
+                .then(response => response.json())
+                .then(data => { return data.artists.items[0].id });
+            console.log(searchInput + ' has such an ID ' + artistID)
+
+            //GET request with the artist ID to extract the albums 
+            let fetchedAlbums = await fetch('https://api.spotify.com/v1/artists/' + artistID + '/albums?include_groups=album&market=US&limit=50', searchParameters)
+                .then(response => response.json())
+                .then(data => setAlbums(data.items))
+                if(!successfullSearch) setSuccessfullSearch(true)
+
+        } catch (e) {
+            console.log(e);
+            setSuccessfullSearch(false);
+        }
     }
 
     useEffect(() => {
@@ -70,16 +78,22 @@ function AlbumSearcher() {
             </div>
 
             <div className='flex flex-row flex-wrap gap-4 p-5'>
-                {albums.map((album, i) => {
-                    return (
-                        <AlbumCard
-                            key={i}
-                            title={album.name}
-                            imgSrc={album.images[0].url}
-                            linkToSpotify={album.external_urls.spotify}
-                        />
-                    )
-                })}
+                {!successfullSearch ? <>
+                    <h1 className='font-bold text-2xl text-white p-4 w-full text-center'>
+                        Sorry! ... We didn't find it :(
+                    </h1>
+                </> : 
+                    albums.map((album, i) => {
+                        return (
+                            <AlbumCard
+                                key={i}
+                                title={album.name}
+                                imgSrc={album.images[0].url}
+                                linkToSpotify={album.external_urls.spotify}
+                            />
+                        )
+                    })
+                }
             </div>
         </div>
     )
