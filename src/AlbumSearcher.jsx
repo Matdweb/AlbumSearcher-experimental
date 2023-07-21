@@ -2,6 +2,7 @@ import React from 'react'
 import AlbumCard from './AlbumCard'
 import { useEffect, useState } from 'react';
 import getAccessToken from './api/spotify/getAccessToken';
+import getArtistId from './api/spotify/getArtistId';
 
 function AlbumSearcher() {
 
@@ -18,26 +19,21 @@ function AlbumSearcher() {
         console.log('Searching...' + searchInput + ' with this access token ' + accessToken);
 
         //GET request to get an artist ID 
-        var searchParameters = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken
-            }
-        }
-
         try {
 
-            let artistID = await fetch('https://api.spotify.com/v1/search?q=' + searchInput + '&type=artist', searchParameters)
-                .then(response => response.json())
-                .then(data => { return data.artists.items[0].id });
-            console.log(searchInput + ' has such an ID ' + artistID)
+            const handleArtistId = async () => {
+                const id = await getArtistId(searchInput);
+                console.log(searchInput + ' id is ' + id);
+            }
+            const artistID = await handleArtistId()
 
             //GET request with the artist ID to extract the albums 
-            let fetchedAlbums = await fetch('https://api.spotify.com/v1/artists/' + artistID + '/albums?include_groups=album&market=US&limit=50', searchParameters)
-                .then(response => response.json())
-                .then(data => setAlbums(data.items))
-                if(!successfullSearch) setSuccessfullSearch(true)
+            const handleAlbumsRequest = async () => {
+                const fetchedAlbums = await getArtistAlbumsById(artistID);
+                setAlbums(fetchedAlbums);
+            }
+            handleAlbumsRequest();
+            if(!successfullSearch) setSuccessfullSearch(true)
 
         } catch (e) {
             console.log(e);
@@ -51,7 +47,6 @@ function AlbumSearcher() {
             const handleAccessToken = async () => {
                 const token = await getAccessToken();
                 setAccessToken(token);
-                console.log('Access token in component: ' + token)
             }
             handleAccessToken();
         }
