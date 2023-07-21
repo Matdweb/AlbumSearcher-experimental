@@ -1,8 +1,10 @@
+const clientId = import.meta.env.VITE_CLIENT_ID_SPOTIFY_API;
+const clientSecret = import.meta.env.VITE_CLIENT_SECRET_SPOTIFY_API;
+
 const getAccessToken = async () => {
     const accessToken = null;
 
     try {
-
         var authParameters = {
             method: 'POST',
             headers: {

@@ -5,11 +5,6 @@ import getAccessToken from './api/spotify/getAccessToken';
 
 function AlbumSearcher() {
 
-    const clientId = import.meta.env.VITE_CLIENT_ID_SPOTIFY_API;
-    const clientSecret = import.meta.env.VITE_CLIENT_SECRET_SPOTIFY_API;
-    const pageLink = import.meta.env.VITE_PAGE_LINK;
-
-    //const array = [1, 2, 3, 4, 5, 6];
     const [successfullSearch, setSuccessfullSearch] = useState(true);
     const [searchInput, setSearchhInput] = useState('');
     const [accessToken, setAccessToken] = useState('');
