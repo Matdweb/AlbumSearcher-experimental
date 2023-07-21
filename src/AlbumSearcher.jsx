@@ -7,7 +7,7 @@ function AlbumSearcher() {
 
     const [successfullSearch, setSuccessfullSearch] = useState(true);
     const [searchInput, setSearchhInput] = useState('');
-    const [accessToken, setAccessToken] = useState('');
+    const [accessToken, setAccessToken] = useState(null);
     const [albums, setAlbums] = useState([]);
 
     const handleChange = ({ target }) => {
@@ -15,7 +15,7 @@ function AlbumSearcher() {
     }
 
     const handleSearch = async () => {
-        console.log('Searching...' + searchInput);
+        console.log('Searching...' + searchInput + ' with this access token ' + accessToken);
 
         //GET request to get an artist ID 
         var searchParameters = {
@@ -48,7 +48,12 @@ function AlbumSearcher() {
     useEffect(() => {
         //API access token request 
         if(!accessToken){
-            setAccessToken(getAccessToken());
+            const handleAccessToken = async () => {
+                const token = await getAccessToken();
+                setAccessToken(token);
+                console.log('Access token in component: ' + token)
+            }
+            handleAccessToken();
         }
     }, [])
 
