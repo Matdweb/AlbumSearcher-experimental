@@ -1,6 +1,13 @@
 const clientId = import.meta.env.VITE_CLIENT_ID_SPOTIFY_API;
 const clientSecret = import.meta.env.VITE_CLIENT_SECRET_SPOTIFY_API;
 
+const expireTokenInLocalStorage = async (time) => {
+    setTimeout(() => {
+        console.log("Access Token expired");
+        localStorage.removeItem("Access Token");
+    }, time)
+}
+
 const getAccessToken = async () => {
     try {
         var authParameters = {
@@ -14,6 +21,9 @@ const getAccessToken = async () => {
         const token = fetch('https://accounts.spotify.com/api/token', authParameters)
             .then(result => result.json())
             .then(data => { return data.access_token })
+
+        await expireTokenInLocalStorage(3600);
+
         return await token;
 
     } catch (e) {
