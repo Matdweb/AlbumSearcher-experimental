@@ -2,8 +2,16 @@
 import getAccessToken from "./getAccessToken";
 
 const getSearchParams = async () => {
-    const accessToken = await getAccessToken();
-    console.log(accessToken);
+    let accessToken = null;
+
+    const StoredToken = localStorage.getItem("Access Token")
+    if(StoredToken){
+        accessToken = StoredToken;
+    } else {
+        accessToken = await getAccessToken();
+        localStorage.setItem("Access Token",accessToken);
+    }
+
     return {
         method: 'GET',
         headers: {
