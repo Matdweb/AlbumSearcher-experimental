@@ -1,8 +1,8 @@
 import React from 'react'
 import AlbumCard from './AlbumCard'
 import { useEffect, useState } from 'react';
-import getAccessToken from './api/spotify/getAccessToken';
 import getArtistId from './api/spotify/getArtistId';
+import getArtistAlbumsById from './api/spotify/getArtistAlbumsById'
 
 function AlbumSearcher() {
 
@@ -16,14 +16,15 @@ function AlbumSearcher() {
     }
 
     const handleSearch = async () => {
-        console.log('Searching...' + searchInput + ' with this access token ' + accessToken);
-
         //GET request to get an artist ID 
         try {
+            console.log('Searching...' + searchInput );
 
+            //GET the ID of an artist based on a input of the user
             const handleArtistId = async () => {
                 const id = await getArtistId(searchInput);
                 console.log(searchInput + ' id is ' + id);
+                return id;
             }
             const artistID = await handleArtistId()
 
@@ -33,24 +34,13 @@ function AlbumSearcher() {
                 setAlbums(fetchedAlbums);
             }
             handleAlbumsRequest();
-            if(!successfullSearch) setSuccessfullSearch(true)
+            if (!successfullSearch) setSuccessfullSearch(true)
 
         } catch (e) {
             console.log(e);
             setSuccessfullSearch(false);
         }
     }
-
-    useEffect(() => {
-        //API access token request 
-        if(!accessToken){
-            const handleAccessToken = async () => {
-                const token = await getAccessToken();
-                setAccessToken(token);
-            }
-            handleAccessToken();
-        }
-    }, [])
 
     return (
         <div className='bg-gray-950 w-full h-full'>
@@ -70,7 +60,7 @@ function AlbumSearcher() {
                     <h1 className='font-bold text-2xl text-white p-4 w-full text-center'>
                         Sorry! ... We didn't find it :(
                     </h1>
-                </> : 
+                </> :
                     albums.map((album, i) => {
                         return (
                             <AlbumCard
