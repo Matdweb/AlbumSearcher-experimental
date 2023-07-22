@@ -2,7 +2,7 @@
 import searchParameters from './GETSearchParamsWithAccessToken'
 
 const getArtistAlbumsById = async (artistID) => {
-    const fetchedAlbums = await fetch('https://api.spotify.com/v1/artists/' + artistID + '/albums?include_groups=album&market=US&limit=50', searchParameters)
+    const fetchedAlbums = await fetch('https://api.spotify.com/v1/artists/' + artistID + '/albums?include_groups=album&market=US&limit=50', await searchParameters())
         .then(response => response.json())
         .then(data => { return data.items })
     return await fetchedAlbums;
