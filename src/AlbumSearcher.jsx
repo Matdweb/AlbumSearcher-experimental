@@ -8,7 +8,6 @@ function AlbumSearcher() {
 
     const [successfullSearch, setSuccessfullSearch] = useState(true);
     const [searchInput, setSearchhInput] = useState('');
-    const [accessToken, setAccessToken] = useState(null);
     const [albums, setAlbums] = useState([]);
 
     const handleChange = ({ target }) => {
