@@ -1,17 +1,13 @@
 import React from 'react'
 import AlbumCard from './AlbumCard'
 import { useEffect, useState } from 'react';
+import getArtistId from './api/spotify/getArtistId';
+import getArtistAlbumsById from './api/spotify/getArtistAlbumsById'
 
 function AlbumSearcher() {
 
-    const clientId = import.meta.env.VITE_CLIENT_ID_SPOTIFY_API;
-    const clientSecret = import.meta.env.VITE_CLIENT_SECRET_SPOTIFY_API;
-    const pageLink = import.meta.env.VITE_PAGE_LINK;
-
-    //const array = [1, 2, 3, 4, 5, 6];
     const [successfullSearch, setSuccessfullSearch] = useState(true);
     const [searchInput, setSearchhInput] = useState('');
-    const [accessToken, setAccessToken] = useState('');
     const [albums, setAlbums] = useState([]);
 
     const handleChange = ({ target }) => {
@@ -19,50 +15,31 @@ function AlbumSearcher() {
     }
 
     const handleSearch = async () => {
-        console.log('Searching...' + searchInput);
-
         //GET request to get an artist ID 
-        var searchParameters = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken
-            }
-        }
-
         try {
+            console.log('Searching...' + searchInput );
 
-            let artistID = await fetch('https://api.spotify.com/v1/search?q=' + searchInput + '&type=artist', searchParameters)
-                .then(response => response.json())
-                .then(data => { return data.artists.items[0].id });
-            console.log(searchInput + ' has such an ID ' + artistID)
+            //GET the ID of an artist based on a input of the user
+            const handleArtistId = async () => {
+                const id = await getArtistId(searchInput);
+                console.log(searchInput + ' id is ' + id);
+                return id;
+            }
+            const artistID = await handleArtistId()
 
             //GET request with the artist ID to extract the albums 
-            let fetchedAlbums = await fetch('https://api.spotify.com/v1/artists/' + artistID + '/albums?include_groups=album&market=US&limit=50', searchParameters)
-                .then(response => response.json())
-                .then(data => setAlbums(data.items))
-                if(!successfullSearch) setSuccessfullSearch(true)
+            const handleAlbumsRequest = async () => {
+                const fetchedAlbums = await getArtistAlbumsById(artistID);
+                setAlbums(fetchedAlbums);
+            }
+            handleAlbumsRequest();
+            if (!successfullSearch) setSuccessfullSearch(true)
 
         } catch (e) {
             console.log(e);
             setSuccessfullSearch(false);
         }
     }
-
-    useEffect(() => {
-        //API access token request 
-        var authParameters = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: 'grant_type=client_credentials&client_id=' + clientId + '&client_secret=' + clientSecret
-        }
-
-        fetch('https://accounts.spotify.com/api/token', authParameters)
-            .then(result => result.json())
-            .then(data => setAccessToken(data.access_token))
-    }, [])
 
     return (
         <div className='bg-gray-950 w-full h-full'>
@@ -82,7 +59,7 @@ function AlbumSearcher() {
                     <h1 className='font-bold text-2xl text-white p-4 w-full text-center'>
                         Sorry! ... We didn't find it :(
                     </h1>
-                </> : 
+                </> :
                     albums.map((album, i) => {
                         return (
                             <AlbumCard
